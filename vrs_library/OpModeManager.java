@@ -24,17 +24,19 @@ public class OpModeManager {
    public native boolean opModeIsActive();
 
     public static OpModeManager getInstance() {
-        if (manager == null) {
+        // if (manager == null) {
             manager = new OpModeManager();
-        }
+        // }
 
         return manager;
     }
 
 
-    public void run() {
-        //String currentOp = "Autonomous";
-        String currentOp = getChosenOpMode();
+    public void run(String opModeName) {
+
+        
+        String currentOp = "Autonomous";
+        // String currentOp = getChosenOpMode();
         Class<?> clazz = null;
 
         if (currentOp.equals("Teleop")) {
@@ -112,9 +114,33 @@ public class OpModeManager {
 
     }
 
-    
+    // opmodes is in the format 
+    // Autonomous: bunch of strings
+    // Teleop: bunch of strings
+    public String getOpModeList() {
+        return 
+        """
+        [
+        {
+            "name": "Drive Forward",
+            "playMode": "Autonomous",
+            "group": "auto"
+        },
+        {
+            "name": "TeleOpName1",
+            "playMode": "TeleOp",
+            "group": "drive"
+        },
+        {
+            "name": "TeleOpName2",
+            "playMode": "TeleOp",
+            "group": "drive"
+        }
+        ]
+                """;
+    }
 
-    public native String getChosenOpMode();
+    // public native String getChosenOpMode();
 
     public HardwareMap getHardwareMap() {
         return hardwareMap;
