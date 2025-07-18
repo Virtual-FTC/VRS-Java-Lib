@@ -1,4 +1,4 @@
-package vrs_library;
+package com.qualcomm.robotcore.eventloop.opmode;
 
 
 import java.lang.annotation.Retention;
@@ -8,7 +8,7 @@ import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Teleop {
+public @interface TeleOp {
     public String group() default " ";
     public String name()  default "Untitled";
 

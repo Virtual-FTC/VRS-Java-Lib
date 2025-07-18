@@ -1,4 +1,4 @@
-package vrs_library;
+package com.qualcomm.robotcore.hardware;
 
 
 
@@ -13,7 +13,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import vrs_library.Teleop;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 

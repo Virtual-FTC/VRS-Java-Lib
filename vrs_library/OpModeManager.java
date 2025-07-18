@@ -1,8 +1,11 @@
-package vrs_library;
+package com.qualcomm.robotcore.eventloop.opmode;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,6 +22,7 @@ public class OpModeManager {
     private Thread activeOpModeThread = null;
 
     final int MS_BEFORE_FORCE_STOP_AFTER_STOP_REQUESTED = 900;  // taken from OpModeInternal in FTC SDK
+    private static String pathToTeamCodeJar = "/str/program.jar";
 
     enum OpModeEndCause {
         NATURAL, 
@@ -203,15 +207,19 @@ public class OpModeManager {
     }
 
     public static Class<?> findAutonomousClasses() throws AutonomousClassNotFoundError {
-        URL jarLocation = mainRunner.class.getProtectionDomain().getCodeSource().getLocation();
+        // String workingDir = System.getProperty("user.dir");
+        // System.out.println("Working directory: " + workingDir);
+
+        File jarFile = new File(pathToTeamCodeJar);
+        
         try {
-            File jarFile = new File(jarLocation.toURI());
+            URL jarLocation = jarFile.toURI().toURL();
             URLClassLoader classLoader = new URLClassLoader(new URL[] { jarLocation });
             List<Class<?>> classes = new ArrayList<>();
 
             try {
                 JarFile jar = new JarFile(jarFile);
-                String directoryPrefix = "TeamCode";
+                String directoryPrefix = "org/firstinspires/ftc/teamcode";
                 Enumeration<JarEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
@@ -247,7 +255,7 @@ public class OpModeManager {
             }
         }
 
-        catch (URISyntaxException e) {
+        catch (MalformedURLException e) {
             e.printStackTrace();
             throw new AutonomousClassNotFoundError();
         }
@@ -275,7 +283,7 @@ public class OpModeManager {
                         System.out.println(className);
                         try {
                             Class<?> clazz = classLoader.loadClass(className);
-                            if (clazz.isAnnotationPresent(Teleop.class)) {
+                            if (clazz.isAnnotationPresent(TeleOp.class)) {
                                 System.out.println("found you! Teleop is in" + className);
                                 return clazz;
 

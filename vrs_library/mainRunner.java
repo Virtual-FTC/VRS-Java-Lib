@@ -1,5 +1,4 @@
-package vrs_library;
-
+package com.qualcomm.robotcore.eventloop.opmode;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 
-public class mainRunner {
+public class mainRunner { 
     public static native void setOpModeManager(OpModeManager opModeManager);
 
     public static void main(String[] args) {

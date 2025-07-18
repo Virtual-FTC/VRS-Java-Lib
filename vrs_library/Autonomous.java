@@ -1,4 +1,4 @@
-package vrs_library;
+package com.qualcomm.robotcore.eventloop.opmode;
 
 
 import java.lang.annotation.Retention;

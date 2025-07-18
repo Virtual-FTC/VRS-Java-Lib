@@ -1,7 +1,7 @@
-package TeamCode;
-import vrs_library.Autonomous;
-import vrs_library.DcMotor;
-import vrs_library.LinearOpMode;
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
 public class ExampleOpMode extends LinearOpMode {
