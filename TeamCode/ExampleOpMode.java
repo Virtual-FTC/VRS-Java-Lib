@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous
+@Autonomous(group = "Examples", name = "Example Linear OpMode")
 public class ExampleOpMode extends LinearOpMode {
     DcMotor frontLeft;
     DcMotor frontRight;
