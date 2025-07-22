@@ -356,7 +356,9 @@ public class OpModeManager {
                         // Print just the file name, or the full path
                         String className = name.replace("/", ".").replace(".class", "");
                         System.out.println(className);
-                        Class<?> clazz = classLoader.loadClass(className);
+                        Class<?> clazz;
+                        try {
+                         clazz = classLoader.loadClass(className);
 
                         if (clazz.isAnnotationPresent(Autonomous.class)) {
                             System.out.println("found you! Autonomous is in" + className);
@@ -382,6 +384,12 @@ public class OpModeManager {
 
                         }
                     }
+
+                    catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    }
+                    
                 }
 
                 JSONArray jsonified_opModes = new JSONArray(opModesList);
@@ -396,62 +404,75 @@ public class OpModeManager {
 
         catch (MalformedURLException e) {
             e.printStackTrace();
-            throw new AutonomousClassNotFoundError();
+            
         }
+
+        return new JSONArray();
+     //we don't want this to happen
+    //     //TODO Emil thinks that there should be some check on the JS side 
+    //     // that checks if the string returned by getOpModeList is empty (which corresponds to a new JSONArray())
+    //     return new JSONArray();
+
+
 
     }
 
-    public static Class<?> findTeleopClasses() throws TeleopClassNotFoundError {
-        URL jarLocation = mainRunner.class.getProtectionDomain().getCodeSource().getLocation();
-        try {
-            File jarFile = new File(jarLocation.toURI());
-            URLClassLoader classLoader = new URLClassLoader(new URL[] { jarLocation });
-            List<Class<?>> classes = new ArrayList<>();
+    // public static Class<?> findTeleopClasses() throws TeleopClassNotFoundError {
+    //     URL jarLocation = mainRunner.class.getProtectionDomain().getCodeSource().getLocation();
+    //     try {
+    //         File jarFile = new File(jarLocation.toURI());
+    //         URLClassLoader classLoader = new URLClassLoader(new URL[] { jarLocation });
+    //         List<Class<?>> classes = new ArrayList<>();
 
-            try {
-                JarFile jar = new JarFile(jarFile);
-                String directoryPrefix = "TeamCode";
-                Enumeration<JarEntry> entries = jar.entries();
-                while (entries.hasMoreElements()) {
-                    JarEntry entry = entries.nextElement();
-                    String name = entry.getName();
+    //         try {
+    //             JarFile jar = new JarFile(jarFile);
+    //             String directoryPrefix = "TeamCode";
+    //             Enumeration<JarEntry> entries = jar.entries();
+    //             while (entries.hasMoreElements()) {
+    //                 JarEntry entry = entries.nextElement();
+    //                 String name = entry.getName();
 
-                    if (name.startsWith(directoryPrefix) && !entry.isDirectory()) {
-                        // Print just the file name, or the full path
-                        String className = name.replace("/", ".").replace(".class", "");
-                        System.out.println(className);
-                        try {
-                            Class<?> clazz = classLoader.loadClass(className);
-                            if (clazz.isAnnotationPresent(TeleOp.class)) {
-                                System.out.println("found you! Teleop is in" + className);
-                                return clazz;
+    //                 if (name.startsWith(directoryPrefix) && !entry.isDirectory()) {
+    //                     // Print just the file name, or the full path
+    //                     String className = name.replace("/", ".").replace(".class", "");
+    //                     System.out.println(className);
+    //                     try {
+    //                         Class<?> clazz = classLoader.loadClass(className);
+    //                         if (clazz.isAnnotationPresent(TeleOp.class)) {
+    //                             System.out.println("found you! Teleop is in" + className);
+    //                             return clazz;
 
-                            }
+    //                         }
 
-                        }
+    //                     }
 
-                        catch (ClassNotFoundException e) {
-                            System.out.println("no such class found :(");
-                        }
-                    }
-                }
+    //                     catch (ClassNotFoundException e) {
+    //                         System.out.println("no such class found :(");
+    //                     }
+    //                 }
+    //             }
 
-                throw new TeleopClassNotFoundError();
-            }
+    //             throw new TeleopClassNotFoundError();
+    //         }
 
-            catch (IOException e) {
-                e.printStackTrace();
-                throw new TeleopClassNotFoundError();
+    //         catch (IOException e) {
+    //             e.printStackTrace();
+    //             throw new TeleopClassNotFoundError();
 
-            }
-        }
+    //         }
+    //     }
 
-        catch (URISyntaxException e) {
-            e.printStackTrace();
-            throw new TeleopClassNotFoundError();
-        }
+    //     catch (URISyntaxException e) {
+    //         e.printStackTrace();
+    //         throw new TeleopClassNotFoundError();
+    //     }
 
-    }
+    //     //we don't want this to happen
+    //     //TODO Emil thinks that there should be some check on the JS side 
+    //     // that checks if the string returned by getOpModeList is empty (which corresponds to a new JSONArray())
+    //     return new JSONArray();
+
+    // }
 
     public static class AutonomousClassNotFoundError extends Exception {
         public AutonomousClassNotFoundError() {
