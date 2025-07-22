@@ -9,9 +9,7 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Autonomous {
-    public String group() default " ";
-    public String name()  default "Untitled";
-
-
-
+    public String group() default "";
+    public String name()  default "";
+    public String preselectTeleOp() default "";
 }

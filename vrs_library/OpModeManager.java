@@ -331,6 +331,7 @@ public class OpModeManager {
         return hardwareMap;
     }
 
+    // TODO eventually account for when name / group isn't specified
     public static JSONArray findOpModes()  {
         // String workingDir = System.getProperty("user.dir");
         // System.out.println("Working directory: " + workingDir);
