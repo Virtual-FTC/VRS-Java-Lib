@@ -21,9 +21,9 @@ import org.json.JSONObject;
 
 public class OpModeManager {
     private static OpModeManager manager;
-    private HardwareMap hardwareMap = new HardwareMap();
+    private HardwareMap hardwareMap;
     private static HashMap<String, Class<?>> OpModeClasses = new HashMap<>();
-    //private static HashMap<String, String> OpModeTypes = new HashMap<>();
+    private static HashMap<String, String> OpModeTypes = new HashMap<>();
 
     private Thread activeOpModeThread = null;
 
@@ -359,11 +359,15 @@ public class OpModeManager {
                         Class<?> clazz;
                         try {
                          clazz = classLoader.loadClass(className);
+                         
 
                         if (clazz.isAnnotationPresent(Autonomous.class)) {
                             System.out.println("found you! Autonomous is in" + className);
                             Autonomous annotation = clazz.getAnnotation(Autonomous.class);
                             String name_to_appear_on_VRS = annotation.name();
+                            if (name_to_appear_on_VRS.equals("Untitled")) {
+                                name_to_appear_on_VRS = clazz.getSimpleName();
+                            }
                             String group_to_appear_on_VRS = annotation.group();
                             JSONObject opMode = new JSONObject().put("name", name_to_appear_on_VRS).put("playMode", "Autonomous").put("group", group_to_appear_on_VRS);
                             OpModeClasses.put(name_to_appear_on_VRS, clazz);
@@ -377,6 +381,9 @@ public class OpModeManager {
                             TeleOp annotation = clazz.getAnnotation(TeleOp.class);
                             String name_to_appear_on_VRS = annotation.name();
                             String group_to_appear_on_VRS = annotation.group();
+                            if (name_to_appear_on_VRS.equals("Untitled")) {
+                                name_to_appear_on_VRS = clazz.getSimpleName();
+                            }
                             JSONObject opMode = new JSONObject().put("name", name_to_appear_on_VRS).put("playMode", "TeleOp").put("group", group_to_appear_on_VRS);
                             OpModeClasses.put(name_to_appear_on_VRS, clazz);
                            // OpModeTypes.put(name_to_appear_on_VRS, "TeleOp");

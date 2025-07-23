@@ -21,12 +21,13 @@ public class mainRunner {
 
     public static void main(String[] args) {
         OpModeManager opModeManager = OpModeManager.getInstance();
+        System.out.println(opModeManager.getOpModeList());
 
         // Start a thread for initializing the Java application instance in JavaScript
-        new Thread(() -> {
+       new Thread(() -> {
             System.out.println("Starting Thread");
             System.out.println("DIFFERENT JAR RUNNING!!!");
             setOpModeManager(opModeManager);
         }).start();
     }
-}    
+}   
