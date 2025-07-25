@@ -6,12 +6,11 @@ package com.qualcomm.robotcore.hardware;
 public class DcMotor {
 
     public int index;
+    private HardwareDeviceController hardwareDeviceController;
 
-public  DcMotor(String name, String type, int maxrpm, int encoder, int i) {
+public  DcMotor(String name, String type, int maxrpm, int encoder, int i, HardwareDeviceController hardwareDeviceController) {
     index = i;
-
-
-    
+    this.hardwareDeviceController = hardwareDeviceController;
 }
 
 
@@ -28,7 +27,9 @@ public void setDirection(Direction dir) {
 
 public native int getCurrentPosition();
 
-public native void setPower(double power);
+public void setPower(double power) {
+    hardwareDeviceController.receiveMotorCommand(this.index, power);
+}
 
 public enum Direction {
     FORWARD,

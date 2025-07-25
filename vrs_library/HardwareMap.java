@@ -19,8 +19,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class HardwareMap {
     private final Map<String, Object> devices = new HashMap<>();
-
-  public static native String getJSON();
+    private final HardwareDeviceController hardwareDeviceController = new HardwareDeviceController();
+    public static native String getJSON();
     
    //public static native void print(String s);
 
@@ -52,7 +52,7 @@ public class HardwareMap {
         
 
         
-         JSONArray motors = json.getJSONArray("motors");
+        JSONArray motors = json.getJSONArray("motors");
         for (int i = 0; i < motors.length(); i++) {
             JSONObject m = motors.getJSONObject(i);
             String name = m.getString("name");
@@ -60,34 +60,28 @@ public class HardwareMap {
             int maxrpm = m.getInt("maxrpm");
             int encoder = m.getInt("encoder");
 
-            DcMotor motor = new DcMotor(name, type, maxrpm, encoder, i);
+            DcMotor motor = new DcMotor(name, type, maxrpm, encoder, i, hardwareDeviceController);
             devices.put(name, motor);
             System.out.println(name);
-          // print(name);
+            // print(name);
 
-        
-         }
-   
+        }
 
-        
-
-    
-}
+    }
 
 
 
 public <T> T get(java.lang.Class<? extends T> classOrInterface,
-                 java.lang.String deviceName) {
+        java.lang.String deviceName) {
 
-                    Object device = devices.get(deviceName);
-                    if (classOrInterface.isInstance(device)) {
-                        return classOrInterface.cast(device);
-                    }
-                    throw new IllegalArgumentException("No device of type " + classOrInterface + " with name '" + deviceName + "'");
-                }
+    Object device = devices.get(deviceName);
+    if (classOrInterface.isInstance(device)) {
+        return classOrInterface.cast(device);
+    }
+    throw new IllegalArgumentException("No device of type " + classOrInterface + " with name '" + deviceName + "'");
+}
 
-
-                 }
+}
 
 
 
