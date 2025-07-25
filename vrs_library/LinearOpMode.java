@@ -1,12 +1,14 @@
-package vrs_library;
+package com.qualcomm.robotcore.eventloop.opmode;
 
-public class LinearOpMode {
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+public class LinearOpMode extends OpMode {
 
     public HardwareMap hardwareMap = OpModeManager.getInstance().getHardwareMap();
 
     public LinearOpMode() {}
 
-    public void runOpMode() {}
+    public void runOpMode() throws InterruptedException {}
 
     public native void waitForStart();
     

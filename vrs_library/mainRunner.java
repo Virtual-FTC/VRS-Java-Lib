@@ -1,5 +1,4 @@
-package vrs_library;
-
+package com.qualcomm.robotcore.eventloop.opmode;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,11 +16,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 
-public class mainRunner {
-
+public class mainRunner { 
+    public static native void setOpModeManager(OpModeManager opModeManager);
 
     public static void main(String[] args) {
-        
-        OpModeManager.getInstance().run();
+        OpModeManager opModeManager = OpModeManager.getInstance();
+        System.out.println(opModeManager.getOpModeList());
+
+        // Start a thread for initializing the Java application instance in JavaScript
+       new Thread(() -> {
+            System.out.println("Starting Thread");
+            System.out.println("DIFFERENT JAR RUNNING!!!");
+            setOpModeManager(opModeManager);
+        }).start();
     }
-}    
+}   

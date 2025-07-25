@@ -1,4 +1,6 @@
-package vrs_library;
+package com.qualcomm.robotcore.eventloop.opmode;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class OpMode {
     public HardwareMap hardwareMap = OpModeManager.getInstance().getHardwareMap();
@@ -9,7 +11,7 @@ public class OpMode {
 
 
 
-    public static native void waitForStart();
+    // public static native void waitForStart();
 
 
     public void init() {}

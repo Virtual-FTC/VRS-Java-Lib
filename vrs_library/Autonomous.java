@@ -1,4 +1,4 @@
-package vrs_library;
+package com.qualcomm.robotcore.eventloop.opmode;
 
 
 import java.lang.annotation.Retention;
@@ -11,7 +11,6 @@ import java.lang.annotation.ElementType;
 public @interface Autonomous {
     public String group() default " ";
     public String name()  default "Untitled";
-
-
+    public String preselectTeleOp() default "";
 
 }
