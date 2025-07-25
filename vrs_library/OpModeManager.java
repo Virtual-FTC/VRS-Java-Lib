@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class OpModeManager {
     private static OpModeManager manager;
-    private HardwareMap hardwareMap;
+    private HardwareMap hardwareMap = new HardwareMap();
     private static HashMap<String, Class<?>> OpModeClasses = new HashMap<>();
     private static HashMap<String, String> OpModeTypes = new HashMap<>();
 
