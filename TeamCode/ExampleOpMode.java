@@ -30,7 +30,7 @@ public class ExampleOpMode extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
-       waitForStart();
+        waitForStart();
 
 
 
@@ -40,8 +40,12 @@ public class ExampleOpMode extends LinearOpMode {
         backRight.setPower(1);
 
 
+        long start = System.nanoTime();
         while(frontLeft.getCurrentPosition() < 10000) {  
         }
+        long elapsed = System.nanoTime() - start;
+        System.out.println("Elapsed java");
+        System.out.println(elapsed);
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
