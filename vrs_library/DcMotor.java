@@ -24,8 +24,12 @@ public void setDirection(Direction dir) {
 }
 
 
+public int getCurrentPosition() {
+    Thread.yield();
+    return getCurrentPositionInternal();
+};
 
-public native int getCurrentPosition();
+public native int getCurrentPositionInternal();
 
 public void setPower(double power) {
     hardwareDeviceController.receiveMotorCommand(this.index, power);

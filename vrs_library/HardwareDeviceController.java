@@ -22,13 +22,20 @@ public class HardwareDeviceController {
     }
 
     public void receiveMotorCommand(int index, double power) {
+        Thread.yield();
         motorCommands.add(new MotorCommand(index, power));
+        System.out.println("received motor command");
+        System.out.println(System.nanoTime()- lastCommandTime);
         lastCommandTime = System.nanoTime();
         setTimeout(this::checkBatch, 1);
     }
 
     private void checkBatch() {
-        if (System.nanoTime() - lastCommandTime > 1000000) {
+        System.out.println("check batch");
+        long elapsed = System.nanoTime() - lastCommandTime;
+        if (elapsed > 1000000) {
+            System.out.println("IN THE TIMEOUT");
+            System.out.println(elapsed);
             lastCommandTime = Long.MAX_VALUE;
             int len = motorCommands.size();
             int[] indexArray = new int[len];
