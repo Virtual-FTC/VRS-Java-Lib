@@ -1,5 +1,6 @@
 package com.qualcomm.robotcore.hardware;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.LinkedList;
 
 public class HardwareDeviceController {
@@ -15,27 +16,36 @@ public class HardwareDeviceController {
 
     long lastCommandTime;
     LinkedList<MotorCommand> motorCommands;
+    Timer timer;
 
     public HardwareDeviceController() {
         lastCommandTime = Long.MAX_VALUE;
         motorCommands = new LinkedList<>();
+        timer = new Timer();
     }
 
     public void receiveMotorCommand(int index, double power) {
-        Thread.yield();
+        // Thread.yield();
         motorCommands.add(new MotorCommand(index, power));
         System.out.println("received motor command");
         System.out.println(System.nanoTime()- lastCommandTime);
         lastCommandTime = System.nanoTime();
-        setTimeout(this::checkBatch, 1);
+        // setTimeout(this::checkBatch, 1);
+        timer.schedule(new TimerTask() {
+                            @Override
+                                public void run() {
+                                    checkBatch();
+                                }
+                        }, 1);
     }
 
     private void checkBatch() {
         System.out.println("check batch");
         long elapsed = System.nanoTime() - lastCommandTime;
-        if (elapsed > 1000000) {
-            System.out.println("IN THE TIMEOUT");
-            System.out.println(elapsed);
+        // System.out.println("IN THE TIMEOUT");
+        // System.out.println(elapsed);
+        if (elapsed > 900000) {
+            System.out.println("IN IF STATEMENT");
             lastCommandTime = Long.MAX_VALUE;
             int len = motorCommands.size();
             int[] indexArray = new int[len];

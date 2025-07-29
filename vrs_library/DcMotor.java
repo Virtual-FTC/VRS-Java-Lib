@@ -25,7 +25,7 @@ public void setDirection(Direction dir) {
 
 
 public int getCurrentPosition() {
-    Thread.yield();
+    // Thread.yield();
     return getCurrentPositionInternal();
 };
 
