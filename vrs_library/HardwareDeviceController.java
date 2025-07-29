@@ -44,7 +44,7 @@ public class HardwareDeviceController {
         long elapsed = System.nanoTime() - lastCommandTime;
         // System.out.println("IN THE TIMEOUT");
         // System.out.println(elapsed);
-        if (elapsed > 900000) {
+        if (elapsed > 600000) {
             System.out.println("IN IF STATEMENT");
             lastCommandTime = Long.MAX_VALUE;
             int len = motorCommands.size();
