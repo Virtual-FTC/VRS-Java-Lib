@@ -1,9 +1,13 @@
 package com.qualcomm.robotcore.hardware;
-import java.util.Timer;
+import java.util.Timer;     // using Thread.sleep() caused strange timing issues, so used Timer instead.
 import java.util.TimerTask;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 
 public class HardwareDeviceController {
+    // TODO We should adjust this to include servo commands as well, maybe split
+    // into a motorDeviceController and a servoDeviceController
+
+
     public class MotorCommand {
         public int index;
         public double power;
@@ -14,22 +18,40 @@ public class HardwareDeviceController {
         }
     }
 
-    long lastCommandTime;
-    LinkedList<MotorCommand> motorCommands;
+    final long FIRST_COMMAND_TIMEOUT    = 15000000; // in ns, 15ms,
+                                                    // if the time since the first command in a batch 
+                                                    // exceeds this, then batch is sent
+                                                    // (15ms is reasonable enough according to 
+                                                    // https://www.reddit.com/r/FTC/comments/elc4fl/autonomous_loop_speeds/
+                                                    // maybe not ideal though)
+
+    final long LAST_COMMAND_TIMEOUT     = 700000;   // in ns, 0.7ms
+                                                    // if the time since the most recent command in a batch 
+                                                    // exceeds this, then batch is sent
+    
+    long firstCommandTime;  // time of the first command in a batch
+    long lastCommandTime;   // time of the most recent command in a batch
+    ArrayDeque<MotorCommand> motorCommands;
     Timer timer;
 
     public HardwareDeviceController() {
+        firstCommandTime = Long.MAX_VALUE;
         lastCommandTime = Long.MAX_VALUE;
-        motorCommands = new LinkedList<>();
+        motorCommands = new ArrayDeque<>();
         timer = new Timer();
     }
 
     public void receiveMotorCommand(int index, double power) {
         // Thread.yield();
         motorCommands.add(new MotorCommand(index, power));
+        
+        long now = System.nanoTime();
         System.out.println("received motor command");
-        System.out.println(System.nanoTime()- lastCommandTime);
-        lastCommandTime = System.nanoTime();
+        System.out.println(now - lastCommandTime);
+        if (lastCommandTime == Long.MAX_VALUE) {
+            firstCommandTime = now;
+        }
+        lastCommandTime = now;
         // setTimeout(this::checkBatch, 1);
         timer.schedule(new TimerTask() {
                             @Override
@@ -41,12 +63,15 @@ public class HardwareDeviceController {
 
     private void checkBatch() {
         System.out.println("check batch");
-        long elapsed = System.nanoTime() - lastCommandTime;
-        // System.out.println("IN THE TIMEOUT");
-        // System.out.println(elapsed);
-        if (elapsed > 600000) {
+        long now = System.nanoTime();
+        long lastCommandElapsed = now - lastCommandTime;
+        long firstCommandElapsed = now - firstCommandTime;
+
+        if (lastCommandElapsed > LAST_COMMAND_TIMEOUT) {
             System.out.println("IN IF STATEMENT");
+            firstCommandTime = Long.MAX_VALUE;
             lastCommandTime = Long.MAX_VALUE;
+            
             int len = motorCommands.size();
             int[] indexArray = new int[len];
             double[] powerArray = new double[len];
@@ -65,16 +90,4 @@ public class HardwareDeviceController {
     }
 
     private native void sendBatchCommand(int[] indexArray, double[] powerArray);
-
-    // exactly from https://stackoverflow.com/questions/26311470/what-is-the-equivalent-of-javascript-settimeout-in-java
-    private static void setTimeout(Runnable runnable, int delay) {
-        new Thread(() -> {
-            try {
-                Thread.sleep(delay);
-                runnable.run();
-            } catch (Exception e) {
-                System.err.println(e);
-            }
-        }).start();
-    }
 }
